@@ -1,4 +1,4 @@
-This is a repo for discipline CSTD
+This is a repo for discipline CSAD
 
 Task 1. Initiate GIT repository:
 1. Create a github repo with the name “csdt<YY1YY2><group><student's full
