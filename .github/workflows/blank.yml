@@ -1,0 +1,41 @@
+stages:
+  - build
+  - test
+  - package
+
+variables:
+  ARTIFACTS_DIR: "artifacts"
+
+before_script:
+  - python -m venv venv
+  - source venv/bin/activate
+  - pip install -r requirements.txt
+
+build_application:
+  stage: build
+  script:
+    - mkdir -p ${ARTIFACTS_DIR}/binaries
+    - python setup.py build
+    - cp -r build/lib/* ${ARTIFACTS_DIR}/binaries/
+  artifacts:
+    paths:
+      - ${ARTIFACTS_DIR}/binaries
+
+test_application:
+  stage: test
+  script:
+    - mkdir -p ${ARTIFACTS_DIR}/test-reports
+    - python -m unittest discover -s tests -v
+    - cp -r tests/test-reports/* ${ARTIFACTS_DIR}/test-reports/
+  artifacts:
+    when: always
+    paths:
+      - ${ARTIFACTS_DIR}/test-reports
+
+package_application:
+  stage: package
+  script:
+    - zip -r ${ARTIFACTS_DIR}/application.zip ${ARTIFACTS_DIR}/binaries ${ARTIFACTS_DIR}/test-reports
+  artifacts:
+    paths:
+      - ${ARTIFACTS_DIR}/application.zip
